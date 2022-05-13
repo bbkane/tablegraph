@@ -12,7 +12,10 @@
     <script type="text/javascript">
       fetch("data.json")
         .then(response => response.json())
-        .then(json => {vegaEmbed('#vis', json); vegaEmbed('#vis2', json);});
+        .then(json => {
+          vegaEmbed('#vis', json); 
+          vegaEmbed('#vis2', json);
+        });
     </script>
   </body>
 </html>
