@@ -1,0 +1,22 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Diff",
+  "data": {"url": "./data.csv"},
+  "mark": {"type": "line", "tooltip": true, "point": true},
+  "height": "container",
+  "width": "container",
+  "encoding": {
+    "x": {"field": "Date", "type": "temporal"},
+    "y": {"field": "Value", "type": "quantitative"},
+    "color": {"field": "Type", "type": "nominal"},
+    "opacity": {"condition": {"param": "hover", "value": 1}, "value": 0.1}
+  },
+  "title": {"text": "Diff"},
+  "params": [
+    {
+      "name": "hover",
+      "bind": "legend",
+      "select": {"type": "point", "fields": ["symbol"]}
+    }
+  ]
+}

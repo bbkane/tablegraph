@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Embedding Vega-Lite</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.2"></script>
+  </head>
+  <body>
+    <div id="vis" style="height:500px; width:800px"></div>
+    <script type="text/javascript">
+      fetch("data.json")
+        .then(response => response.json())
+        .then(json => {
+          vegaEmbed('#vis', json); 
+        });
+    </script>
+  </body>
+</html>
