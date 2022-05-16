@@ -109,3 +109,35 @@ Bar charts: https://vega.github.io/vega-lite/docs/bar.html
 grouped bar chart: https://vega.github.io/vega-lite/docs/bar.html#grouped-bar-chart-with-facet
 
 For example, Git (or expenses) over time. Could also be stacked? Or an areachart
+
+# 04_linechart_diff/
+
+What's going on with these dates? Maybe it's representing it as 2020-01-01 00:00:00 and then some rounding error makes it miss something? 
+
+```csv
+Date,Type,Value
+2020-01-01,Added,10
+2020-01-02,Added,5
+2020-01-02,Removed,3
+```
+
+https://vega.github.io/vega-lite/docs/type.html says I should be fine?
+
+```
+Date,Type,Value
+2020-01-01 12:32:17,Added,10
+2020-01-02 12:32:17,Added,5
+2020-01-02 12:32:17,Removed,3
+```
+
+Ok, that worked..., and if I take it back, it doesn't work again. I should open a bug report for this
+
+There is one - see https://github.com/vega/vega-lite/issues/7185 - it looks like it's ingesting the date as UTC, then rendering it as my local timezone, which is 8 hours behind. I've added a comment.
+
+Let's carry on!
+
+# 05_groupedbar/
+
+https://vega.github.io/vega-lite/docs/bar.html#grouped-bar-chart-with-offset
+
+It looks like it's doing stacked, and the lines are too thin... TODO: next time :)

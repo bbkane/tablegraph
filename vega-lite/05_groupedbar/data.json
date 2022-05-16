@@ -8,7 +8,7 @@
       {"Date": "2020-01-02", "Type": "Removed", "Value": 3}
     ]
   },
-  "mark": {"type": "line", "tooltip": true, "point": true},
+  "mark": {"type": "bar", "tooltip": true, "point": true},
   "height": "container",
   "width": "container",
   "encoding": {
