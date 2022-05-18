@@ -147,3 +147,144 @@ https://vega.github.io/vega-lite/docs/bar.html#grouped-bar-chart-with-offset
 It looks like it's doing stacked, and the lines are too thin
 
 This can be manipulated with https://vega.github.io/vega-lite/docs/timeunit.html , but I *do* actually want to see the year
+
+# 6_groupedbar/
+
+Ok, I can't just add the `xOffset` property with the `temporal` x type:
+
+```json
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Ben's Diff",
+  "data": {
+    "values": [
+      {"Date": "2020-01-01", "Type": "Added", "Value": 10},
+      {"Date": "2020-01-04", "Type": "Added", "Value": 5},
+      {"Date": "2020-01-04", "Type": "Removed", "Value": 3},
+      {"Date": "2020-01-04", "Type": "Other", "Value": 3}
+    ]
+  },
+  "mark": {"type": "bar", "tooltip": true, "point": true, "cornerRadiusEnd": 4},
+  "height": "container",
+  "width": "container",
+  "encoding": {
+    "x": {
+      "field": "Date",
+      "type": "temporal",
+      "timeUnit": "utcyearmonthdate",
+      "scale": {"type": "utc"}
+    },
+    "y": {"field": "Value", "type": "quantitative"},
+    "xOffset": {"field": "Type"}, // does not turn stacked into grouped
+    "color": {"field": "Type"},
+    "opacity": {"condition": {"param": "hover", "value": 1}, "value": 0.1}
+  },
+  "title": {"text": "Ben's Diff"},
+  "params": [
+    {
+      "name": "hover",
+      "bind": "legend",
+      "select": {"type": "point", "fields": ["symbol"]}
+    }
+  ]
+}
+```
+
+![image-20220518134849759](README.assets/image-20220518134849759.png)
+
+If I switch the x type to `moninal`, the xOffset works, but the legend doesn't work...
+
+```json
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Ben's Diff",
+  "data": {
+    "values": [
+      {"Date": "2020-01-01", "Type": "Added", "Value": 10},
+      {"Date": "2020-01-04", "Type": "Added", "Value": 5},
+      {"Date": "2020-01-04", "Type": "Removed", "Value": 3},
+      {"Date": "2020-01-04", "Type": "Other", "Value": 3}
+    ]
+  },
+  "mark": {"type": "bar", "tooltip": true, "point": true, "cornerRadiusEnd": 4},
+  "height": "container",
+  "width": "container",
+  "encoding": {
+    "x": {
+      "field": "Date",
+      "type": "nominal", // changed to nominal
+      "timeUnit": "utcyearmonthdate",
+      "scale": {"type": "utc"}
+    },
+    "y": {"field": "Value", "type": "quantitative"},
+    "xOffset": {"field": "Type"},
+    "color": {"field": "Type"},
+    "opacity": {"condition": {"param": "hover", "value": 1}, "value": 0.1}
+  },
+  "title": {"text": "Ben's Diff"},
+  "params": [
+    {
+      "name": "hover",
+      "bind": "legend",
+      "select": {"type": "point", "fields": ["symbol"]}
+    }
+  ]
+}
+```
+
+![image-20220518134919209](README.assets/image-20220518134919209.png)
+
+Let's try the facet approach:
+
+```json
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "Ben's Diff",
+  "data": {
+    "values": [
+      {"Date": "2020-01-01", "Type": "Added", "Value": 10},
+      {"Date": "2020-01-04", "Type": "Added", "Value": 5},
+      {"Date": "2020-01-04", "Type": "Removed", "Value": 3},
+      {"Date": "2020-01-04", "Type": "Other", "Value": 3}
+    ]
+  },
+  "mark": {"type": "bar", "tooltip": true, "point": true, "cornerRadiusEnd": 4},
+  "height": "container",
+  "width": "container",
+  "encoding": {
+    "column": {
+      "field": "Type",
+      "header": {"orient": "bottom"}
+    },
+    "x": {
+      "axis": null,
+      "field": "Date",
+      "type": "quantitative",
+      "timeUnit": "utcyearmonthdate",
+      "scale": {"type": "utc"}
+    },
+    "y": {"field": "Value", "type": "quantitative"},
+    "color": {"field": "Type"},
+    "opacity": {"condition": {"param": "hover", "value": 1}, "value": 0.1}
+  },
+  "config": {
+    "view": {
+      "stroke": "transparent"
+    }
+  },
+  "title": {"text": "Ben's Diff"},
+  "params": [
+    {
+      "name": "hover",
+      "bind": "legend",
+      "select": {"type": "point", "fields": ["symbol"]}
+    }
+  ]
+}
+```
+
+![image-20220518140907235](README.assets/image-20220518140907235.png)
+
+That *REALLY* didn't work...
+
+TODO: ask on Slack once https://github.com/vega/vega-lite/issues/8171 is resolved, or open an issue in a few days.

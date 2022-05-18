@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "Diff",
+  "description": "Ben's Diff",
   "data": {
     "values": [
       {"Date": "2020-01-01", "Type": "Added", "Value": 10},
@@ -14,6 +14,7 @@
   "encoding": {
     "x": {"field": "Date", "type": "temporal", "timeUnit": "utcyearmonthdate", "scale": { "type": "utc"}},
     "y": {"field": "Value", "type": "quantitative"},
+    "xOffset": {"field": "Type"},
     "color": {"field": "Type", "type": "nominal"},
     "opacity": {"condition": {"param": "hover", "value": 1}, "value": 0.1}
   },
