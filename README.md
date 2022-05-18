@@ -134,10 +134,16 @@ Ok, that worked..., and if I take it back, it doesn't work again. I should open 
 
 There is one - see https://github.com/vega/vega-lite/issues/7185 - it looks like it's ingesting the date as UTC, then rendering it as my local timezone, which is 8 hours behind. I've added a comment.
 
+OK, it looks like this can be specified with: https://vega.github.io/vega-lite/docs/timeunit.html#output . I needed to specify both the "timeunit" and the "scale"
+
+TODO: comment on that issue
+
 Let's carry on!
 
-# 05_groupedbar/
+# 05_stackedbar/
 
 https://vega.github.io/vega-lite/docs/bar.html#grouped-bar-chart-with-offset
 
-It looks like it's doing stacked, and the lines are too thin... TODO: next time :)
+It looks like it's doing stacked, and the lines are too thin
+
+This can be manipulated with https://vega.github.io/vega-lite/docs/timeunit.html , but I *do* actually want to see the year
