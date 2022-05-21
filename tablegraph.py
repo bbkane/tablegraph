@@ -144,7 +144,9 @@ def datatables_html_div(div_id: str, table_data: DataTable) -> str:
     return div
 
 
-def plotly_html_div(div_id: str, plotly_data: ty.List[PlotlyTrace], plotly_layout: PlotlyLayout) -> str:
+def plotly_html_div(
+    div_id: str, plotly_data: ty.List[PlotlyTrace], plotly_layout: PlotlyLayout
+) -> str:
     plotly_data_str = json.dumps(plotly_data)
     plotly_layout_str = json.dumps(plotly_layout)
 
@@ -216,7 +218,9 @@ def csv_to_dictrows_gen_fieldnames(inputfile: ty.TextIO, delimiter: str) -> CSVD
     return rows
 
 
-def csv_to_dictrows_with_fieldnames(inputfile: ty.TextIO, delimiter: str, fieldnames: ty.List[str]) -> CSVDictRows:
+def csv_to_dictrows_with_fieldnames(
+    inputfile: ty.TextIO, delimiter: str, fieldnames: ty.List[str]
+) -> CSVDictRows:
     dictreader = csv.DictReader(inputfile, delimiter=delimiter, fieldnames=fieldnames)
     return [row for row in dictreader]
 
@@ -257,7 +261,9 @@ def csv_to_columns_gen_fieldnames(inputfile: ty.TextIO, delimiter: str) -> CSVCo
     return _csv_to_columns(inputfile, delimiter, fieldnames, first_line)
 
 
-def csv_to_columns_with_fieldnames(inputfile: ty.TextIO, delimiter: str, fieldnames: ty.List[str]) -> CSVColums:
+def csv_to_columns_with_fieldnames(
+    inputfile: ty.TextIO, delimiter: str, fieldnames: ty.List[str]
+) -> CSVColums:
     """Create columns when you already know the fieldnames"""
     csvreader = csv.reader(inputfile, delimiter=delimiter)
     first_line = next(csvreader)  # NOTE: will error on empty and that's ok
@@ -286,7 +292,9 @@ def csv_to_rows_gen_fieldnames(inputfile: ty.TextIO, delimeter: str) -> CSVRows:
     return CSVRows(fieldnames=fieldnames, rows=rows)
 
 
-def csv_to_rows_with_fieldnames(inputfile: ty.TextIO, delimeter: str, fieldnames: ty.List[str]) -> CSVRows:
+def csv_to_rows_with_fieldnames(
+    inputfile: ty.TextIO, delimeter: str, fieldnames: ty.List[str]
+) -> CSVRows:
     csvreader = csv.reader(inputfile, delimiter=delimeter)
     rows = [row for row in csvreader]
     return CSVRows(fieldnames=fieldnames, rows=rows)

@@ -3,28 +3,24 @@ package main
 import (
 	"os"
 
-	"github.com/bbkane/warg"
-	"github.com/bbkane/warg/command"
-	"github.com/bbkane/warg/flag"
-	"github.com/bbkane/warg/section"
-	"github.com/bbkane/warg/value"
+	"go.bbkane.com/warg"
+	"go.bbkane.com/warg/command"
+	"go.bbkane.com/warg/flag"
+	"go.bbkane.com/warg/section"
+	"go.bbkane.com/warg/value"
 )
 
 func main() {
 
 	htmlTitleFlag := flag.New(
-		flag.HelpShort("HTML title. Flag ignored when --format != 'html'"),
+		"HTML title. Flag ignored when --format != 'html'",
 		value.String,
 		flag.Default("tablegraph output"),
 	)
 
-	graphFlags := flag.FlagMap{
-		"--div-title": flag.New(
-			flag.HelpShort("Title of div when --format is 'div'"),
-			value.String,
-		),
+	csvParseFlags := flag.FlagMap{
 		"--fieldnames": flag.New(
-			flag.HelpShort("Field names"),
+			"Pass list of field names",
 			value.StringSlice,
 		),
 		"--fieldsep": flag.New(
@@ -37,6 +33,14 @@ func main() {
 			flag.HelpShort("Use the first line of the table as fieldnames"), // TODO: make exclusive to --fieldnames
 			value.Bool,
 		),
+	}
+
+	// flags for making both charts and tables!
+	ioFlags := flag.FlagMap{
+		"--div-id": flag.New(
+			flag.HelpShort("ID of div when --format is 'div'"),
+			value.String,
+		),
 		"--format": flag.New(
 			flag.HelpShort("Output format"),
 			value.StringEnum("div", "html", "json"),
@@ -47,6 +51,29 @@ func main() {
 		"--input": flag.New(
 			flag.HelpShort("Input file"),
 			value.Path,
+		),
+	}
+
+	graphFlags := flag.FlagMap{
+		"--chart-title": flag.New(
+			flag.HelpShort("Chart title"),
+			value.String,
+		),
+		"--x-axis-title": flag.New(
+			flag.HelpShort("X-Axis Title"),
+			value.String,
+		),
+		"--x-type": flag.New(
+			"X type. See https://vega.github.io/vega-lite/docs/type.html",
+			value.StringEnum("nominal", "quantitative", "temporal"),
+		),
+		"--y-type": flag.New(
+			"Y type. See https://vega.github.io/vega-lite/docs/type.html",
+			value.StringEnum("nominal", "quantitative", "temporal"),
+		),
+		"--y-axis-title": flag.New(
+			flag.HelpShort("Y-Axis Title"),
+			value.String,
 		),
 	}
 
@@ -62,21 +89,26 @@ func main() {
 				flag.Required(),
 			),
 			section.Command(
-				"html-bottom",
-				command.HelpShort("Print bottom of generated HTML file to stdout"),
+				"3-col",
+				// "Graph from a 3-column CSV. First column is x-axis, and should be datetime. Second column is a string whose values are used to 'group'. Third column is a numeric column for the y-axis",
+				"Various graphs from 3-column CSVs (x,category,y). Point, line, grouped-bar, stacked-bar ",
 				command.DoNothing,
-			),
-			section.Command(
-				"html-top",
-				command.HelpShort("Print top of generated HTML file to stdout"),
-				command.DoNothing,
-				command.ExistingFlag("--html-title", htmlTitleFlag),
+				command.ExistingFlags(csvParseFlags),
+				command.ExistingFlags(ioFlags),
+				command.ExistingFlags(graphFlags),
+				command.Flag(
+					"--type",
+					"Type of graph to generate",
+					value.StringEnum("point", "line", "grouped-bar", "stacked-bar"),
+				),
+				command.HelpLong("First column is x-axis, and should be datetime. Second column is a string whose values are used to 'group'. Third column is a numeric column for the y-axis"),
 			),
 			section.Command(
 				"table",
 				command.HelpShort("Make HTML table"),
 				command.DoNothing,
-				command.ExistingFlags(graphFlags),
+				command.ExistingFlags(csvParseFlags),
+				command.ExistingFlags(ioFlags),
 				command.Flag(
 					"--page-length",
 					flag.HelpShort("Entries in table before needing to click next page"),
@@ -84,25 +116,19 @@ func main() {
 				),
 				command.HelpLong("NOTE: columns should not have a `.` in the title. See https://datatables.net/forums/discussion/69257/data-with-a-in-the-name-makes-table-creation-fail#latest"),
 			),
-			section.Command(
-				"timechart",
-				command.HelpShort("Line graph. First column is x-axis, and should be datetime. Second column can optionally be a string whose values are used to 'group' the numeric columns and create different lines in the chart. Other (numeric) columns are y-axes."),
-				command.DoNothing,
-				command.ExistingFlags(graphFlags),
-				command.Flag(
-					"--chart-title",
-					flag.HelpShort("Chart title"),
-					value.String,
+			section.Section(
+				"html",
+				"HTML snippets",
+				section.Command(
+					"top",
+					"HTML top",
+					command.DoNothing,
+					command.ExistingFlag("--html-title", htmlTitleFlag),
 				),
-				command.Flag(
-					"--xaxis-title",
-					flag.HelpShort("X-Axis Title"),
-					value.String,
-				),
-				command.Flag(
-					"--yaxis-title",
-					flag.HelpShort("Y-Axis Title"),
-					value.String,
+				section.Command(
+					"bottom",
+					"HTML bottom",
+					command.DoNothing,
 				),
 			),
 		),
