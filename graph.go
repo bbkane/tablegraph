@@ -5,7 +5,6 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -22,11 +21,8 @@ type graphCSV struct {
 func graph(ctx command.Context) error {
 	// Parse flags
 	input, inputExists := ctx.Flags["--input"].(string)
-	fieldNames, fieldNamesExists := ctx.Flags["--fieldnames"].([]string)
-	firstLine, firstLineExists := ctx.Flags["--firstline"].(bool)
-	fieldSep := ctx.Flags["--fieldsep"].(string) // TODO: use rune for this...
-
-	// TODO: This doesn't put the field names back on the file!! I think the only way to do this is to always parse the CSV... then extract field names if needed, and add them back on if needed
+	fieldNames := ctx.Flags["--fieldnames"].(string) // TODO: this has changed to string
+	fieldSep := ctx.Flags["--fieldsep"].(string)     // TODO: use rune for this...
 
 	// Get a fieldSepRune
 	if fieldSep == "" {
@@ -39,12 +35,12 @@ func graph(ctx command.Context) error {
 		fieldSepRune = fieldSepRunes[0]
 	}
 
-	// Read CSV into file pointer
+	// Get file pointer
 	var inputFp *os.File
 	if inputExists {
 		fp, err := os.Open(input)
 		if err != nil {
-			return fmt.Errorf("Error opening input CSV: %s: %w", input, err)
+			return fmt.Errorf("error opening input CSV: %s: %w", input, err)
 		}
 		defer fp.Close()
 		inputFp = fp
@@ -53,58 +49,56 @@ func graph(ctx command.Context) error {
 		input = "stdin"
 	}
 
-	// read file pointer into string
-	buf := new(bytes.Buffer)
-	_, err := buf.ReadFrom(inputFp)
+	// Read file pointer into CSV
+	csvReader := csv.NewReader(inputFp)
+	csvReader.Comma = fieldSepRune
+	records, err := csvReader.ReadAll()
 	if err != nil {
-		return fmt.Errorf("Error reading input CSV: %s: %w", input, err)
+		return fmt.Errorf("unable to parse CSV: %s: %w", input, err)
 	}
-	csvContents := buf.String()
-
-	// read first line of CSV and assert len == 3
-	r := csv.NewReader(strings.NewReader(csvContents))
-	r.Comma = fieldSepRune
-	firstLineContents, err := r.Read()
-	if err == io.EOF {
-		return fmt.Errorf("input CSV appears to be empty: %s: %w", input, err)
-	}
-	if err != nil {
-		return fmt.Errorf("error parsing CSV: %s: %w", input, err)
-	}
-	if len(firstLineContents) != 3 {
-		return fmt.Errorf("the CSV should have 3 columns")
+	if len(records) == 0 {
+		return fmt.Errorf("the CSV appears to have no rows: %s", input)
 	}
 
-	// Get field names
-	if fieldNamesExists && firstLineExists {
-		return errors.New("both --fieldnames and --firstline flags passed. Pass only one or don't pass either to generate the fieldnames")
+	if len(records[0]) != 3 {
+		return fmt.Errorf("the CSV should have 3 columns: %s", input)
+
 	}
 
-	if fieldNamesExists {
-		// do nothing, the user passed fieldnames
-		if len(fieldNames) != 3 {
+	// get fieldnames
+	var fieldNamesSlice []string
+	// if firstline passed, use it
+	if fieldNames == "firstline" {
+		fieldNamesSlice = records[0]
+	} else {
+		// othewise, use passed fieldnames, add them to csv
+		fieldNamesSlice = strings.Split(fieldNames, ",")
+		if len(fieldNamesSlice) != 3 {
 			return fmt.Errorf("--fieldnames should be a list of length 3: %s", fieldNames)
 		}
-	} else if firstLineExists {
-		// grab field names from the first line
-		if firstLine == false {
-			return errors.New("--firstline should not be false...")
-		}
-		fieldNames = firstLineContents
-	} else {
-		// generate columns
-		fieldNames = []string{"field_1", "field_2", "field_3"}
 	}
+
+	// encode CSV into string
+	buf := new(bytes.Buffer)
+	w := csv.NewWriter(buf) // TODO: put this into a string
+	if fieldNames != "firstline" {
+		if err := w.Write(fieldNamesSlice); err != nil {
+			return fmt.Errorf("error writing fieldnames to csv: %s: %w", fieldNames, err)
+		}
+	}
+
+	w.WriteAll(records)
+	if err := w.Error(); err != nil {
+		return fmt.Errorf("error writing csv: %s: %w", input, err)
+	}
+
+	csvStr := buf.String()
 
 	gCSV := graphCSV{
-		FieldNames:  fieldNames,
-		CSVContents: csvContents,
+		FieldNames:  fieldNamesSlice,
+		CSVContents: csvStr,
 	}
 
-	fmt.Printf("%#v\n", gCSV)
-
-	// TODO: Turn the above into a separate function
-
-	// print JSON
+	fmt.Println(gCSV)
 	return nil
 }

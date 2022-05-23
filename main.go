@@ -20,18 +20,15 @@ func main() {
 
 	csvParseFlags := flag.FlagMap{
 		"--fieldnames": flag.New(
-			"Pass list of field names",
-			value.StringSlice,
+			"Pass comma separated fieldnames (ex: 'date,type,lines') or the string 'firstline' to use the first line of the CSV",
+			value.String,
+			flag.Default("x,category,y"),
 		),
 		"--fieldsep": flag.New(
 			flag.HelpShort("Field separator for input table"),
 			value.String,
 			flag.Default(","), // changed from TAB
 			flag.Required(),
-		),
-		"--firstline": flag.New(
-			flag.HelpShort("Use the first line of the table as fieldnames"), // TODO: make exclusive to --fieldnames
-			value.Bool,
 		),
 	}
 
