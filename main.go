@@ -24,7 +24,7 @@ func main() {
 			value.StringSlice,
 		),
 		"--fieldsep": flag.New(
-			flag.HelpShort("Field separator for input table. TAB by default"),
+			flag.HelpShort("Field separator for input table"),
 			value.String,
 			flag.Default(","), // changed from TAB
 			flag.Required(),
@@ -35,7 +35,7 @@ func main() {
 		),
 	}
 
-	// flags for making both charts and tables!
+	// flags for making both graphs and tables!
 	ioFlags := flag.FlagMap{
 		"--div-id": flag.New(
 			flag.HelpShort("ID of div when --format is 'div'"),
@@ -49,14 +49,14 @@ func main() {
 		),
 		"--html-title": htmlTitleFlag,
 		"--input": flag.New(
-			flag.HelpShort("Input file"),
+			flag.HelpShort("Input file. tablegraph will use stdin if not passed"),
 			value.Path,
 		),
 	}
 
 	graphFlags := flag.FlagMap{
-		"--chart-title": flag.New(
-			flag.HelpShort("Chart title"),
+		"--graph-title": flag.New(
+			flag.HelpShort("Graph title"),
 			value.String,
 		),
 		"--x-axis-title": flag.New(
@@ -80,19 +80,19 @@ func main() {
 	app := warg.New(
 		"tablegraph",
 		section.New(
-			section.HelpShort("Turn CSVs into graphs! NOTE: this is an experiment at this stage. Use chart.py"),
+			section.HelpShort("Turn CSVs into graphs! NOTE: this is an experiment at this stage. Use tablegraph.py"),
 			section.Flag(
 				"--output",
-				flag.HelpShort("Path to output file. Use DATEME as an alias for 'chart.<timestamp>'."),
+				flag.HelpShort("Path to output file. Use DATEME as an alias for 'graph.<timestamp>'."),
 				value.Path,
 				flag.Default("DATEME.html"),
 				flag.Required(),
 			),
 			section.Command(
-				"3-col",
+				"graph",
 				// "Graph from a 3-column CSV. First column is x-axis, and should be datetime. Second column is a string whose values are used to 'group'. Third column is a numeric column for the y-axis",
 				"Various graphs from 3-column CSVs (x,category,y). Point, line, grouped-bar, stacked-bar ",
-				command.DoNothing,
+				graph,
 				command.ExistingFlags(csvParseFlags),
 				command.ExistingFlags(ioFlags),
 				command.ExistingFlags(graphFlags),
