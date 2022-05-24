@@ -55,22 +55,28 @@ func main() {
 		"--graph-title": flag.New(
 			flag.HelpShort("Graph title"),
 			value.String,
+			flag.Default("Graph Title"),
+		),
+		"--type": flag.New(
+			"Type of graph to generate",
+			value.StringEnum("point", "line", "grouped-bar", "stacked-bar"),
+			flag.Default("line"),
 		),
 		"--x-axis-title": flag.New(
-			flag.HelpShort("X-Axis Title"),
+			flag.HelpShort("X-Axis Title. Will be set by fieldnames if not set explicitly"),
 			value.String,
 		),
 		"--x-type": flag.New(
 			"X type. See https://vega.github.io/vega-lite/docs/type.html",
 			value.StringEnum("nominal", "quantitative", "temporal"),
 		),
+		"--y-axis-title": flag.New(
+			flag.HelpShort("Y-Axis Title.  Will be set by fieldnames if not set explicitly"),
+			value.String,
+		),
 		"--y-type": flag.New(
 			"Y type. See https://vega.github.io/vega-lite/docs/type.html",
 			value.StringEnum("nominal", "quantitative", "temporal"),
-		),
-		"--y-axis-title": flag.New(
-			flag.HelpShort("Y-Axis Title"),
-			value.String,
 		),
 	}
 
@@ -93,11 +99,6 @@ func main() {
 				command.ExistingFlags(csvParseFlags),
 				command.ExistingFlags(ioFlags),
 				command.ExistingFlags(graphFlags),
-				command.Flag(
-					"--type",
-					"Type of graph to generate",
-					value.StringEnum("point", "line", "grouped-bar", "stacked-bar"),
-				),
 				command.HelpLong("First column is x-axis, and should be datetime. Second column is a string whose values are used to 'group'. Third column is a numeric column for the y-axis"),
 			),
 			section.Command(
