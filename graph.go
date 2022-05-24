@@ -88,11 +88,22 @@ func graph(ctx command.Context) error {
 	fieldNames := ctx.Flags["--fieldnames"].(string)
 	fieldSep := ctx.Flags["--fieldsep"].(string)
 
-	// // Graph Flags. Let's do these tomorrow :D
-	// gTitle := ctx.Flags["--graph-title"].(string)
-	// gType := ctx.Flags["--type"].(string)
-	// gXAxisTitle, gXAxisTitleExists := ctx.Flags["--x-axis-title"]
-	// gYAxisTitle, gYAxisTitleExists := ctx.Flags["--y-axis-title"]
+	// Graph Flags
+	gTitle := ctx.Flags["--graph-title"].(string)
+	gType := ctx.Flags["--type"].(string)
+	gXType, _ := ctx.Flags["--x-type"].(string)
+	gYType, _ := ctx.Flags["--y-type"].(string)
+	gXTimeUnit, _ := ctx.Flags["--x-time-unit"].(string)
+
+	switch gType {
+	case "grouped-bar":
+		gType = "bar"
+		// TODO: add the xOffset thingie
+	case "stacked-bar":
+		gType = "bar"
+	default:
+		// pass
+	}
 
 	// Get a fieldSepRune
 	if fieldSep == "" {
@@ -134,7 +145,7 @@ func graph(ctx command.Context) error {
 			},
 		},
 		Mark: vl.Mark{
-			Type:    "line", // TODO: param
+			Type:    gType,
 			Tooltip: true,
 			Point:   true,
 		},
@@ -143,15 +154,15 @@ func graph(ctx command.Context) error {
 		Encoding: vl.Encoding{
 			X: vl.XY{
 				Field:    gCSV.XField,
-				Type:     "temporal",         // TODO: param
-				TimeUnit: "utcyearmonthdate", // TODO: param
+				Type:     gXType,
+				TimeUnit: gXTimeUnit,
 				Scale: &vl.Scale{
 					Type: "utc",
-				},
+				}, // TODO: param
 			},
 			Y: vl.XY{
 				Field: gCSV.YField,
-				Type:  "quantitative", // TODO: param
+				Type:  gYType,
 			},
 			Color: vl.Color{
 				Field: gCSV.ColorField,
@@ -166,7 +177,7 @@ func graph(ctx command.Context) error {
 			},
 		},
 		Title: vl.Title{
-			Text: "TODO: title", // TODO: param
+			Text: gTitle,
 		},
 		Params: []vl.Params{
 			{

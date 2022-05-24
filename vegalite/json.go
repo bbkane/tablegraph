@@ -30,7 +30,7 @@ type Scale struct {
 }
 type XY struct {
 	Field    string `json:"field"`
-	Type     string `json:"type"`
+	Type     string `json:"type,omitempty"`
 	TimeUnit string `json:"timeUnit,omitempty"`
 	Scale    *Scale `json:"scale,omitempty"`
 }

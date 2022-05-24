@@ -18,7 +18,7 @@
     "x": {
       "field": "date",
       "type": "temporal",
-      "timeUnit": "utcyearmonthdate",
+      "timeUnit": "utcyear",
       "scale": {
         "type": "utc"
       }
@@ -40,7 +40,7 @@
     }
   },
   "title": {
-    "text": "TODO: title"
+    "text": "Graph Title"
   },
   "params": [
     {

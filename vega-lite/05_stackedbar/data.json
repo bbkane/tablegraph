@@ -3,26 +3,69 @@
   "description": "Diff",
   "data": {
     "values": [
-      {"Date": "2020-01-01", "Type": "Added", "Value": 10},
-      {"Date": "2020-01-04", "Type": "Added", "Value": 5},
-      {"Date": "2020-01-04", "Type": "Removed", "Value": 3}
+      {
+        "Date": "2020-01-01",
+        "Type": "Added",
+        "Value": 10
+      },
+      {
+        "Date": "2020-01-04",
+        "Type": "Added",
+        "Value": 5
+      },
+      {
+        "Date": "2020-01-04",
+        "Type": "Removed",
+        "Value": 3
+      }
     ]
   },
-  "mark": {"type": "bar", "tooltip": true, "point": true, "cornerRadiusEnd": 4},
+  "mark": {
+    "type": "bar",
+    "tooltip": true,
+    "point": true,
+    "cornerRadiusEnd": 4
+  },
   "height": "container",
   "width": "container",
   "encoding": {
-    "x": {"field": "Date", "type": "temporal", "timeUnit": "utcyearmonthdate", "scale": { "type": "utc"}},
-    "y": {"field": "Value", "type": "quantitative"},
-    "color": {"field": "Type", "type": "nominal"},
-    "opacity": {"condition": {"param": "hover", "value": 1}, "value": 0.1}
+    "x": {
+      "field": "Date",
+      "type": "temporal",
+      "timeUnit": "utcyearmonthdate",
+      "scale": {
+        "type": "utc"
+      }
+    },
+    "y": {
+      "field": "Value",
+      "type": "quantitative"
+    },
+    "color": {
+      "field": "Type",
+      "type": "nominal"
+    },
+    "opacity": {
+      "condition": {
+        "param": "hover",
+        "value": 1
+      },
+      "value": 0.1
+    }
   },
-  "title": {"text": "Diff"},
+  "title": {
+    "text": "Diff"
+  },
   "params": [
     {
       "name": "hover",
       "bind": "legend",
-      "select": {"type": "point", "fields": ["symbol"]}
+      "select": {
+        "type": "point",
+        "fields": [
+          "symbol"
+        ]
+      }
     }
   ]
 }

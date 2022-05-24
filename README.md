@@ -296,3 +296,9 @@ $ cat tmp.csv | go run . graph --fieldnames firstline > ./vega-lite/07_line_from
 ```
 
 This seems to work. Let's refactor some and parameterize it
+
+Add the time stuff
+
+```
+$ cat tmp.csv | go run . graph --fieldnames firstline --type line --y-type quantitative --x-type temporal --x-time-unit utcyear > ./vega-lite/07_line_from_tablegraph/data.json
+```

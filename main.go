@@ -61,18 +61,15 @@ func main() {
 			"Type of graph to generate",
 			value.StringEnum("point", "line", "grouped-bar", "stacked-bar"),
 			flag.Default("line"),
+			flag.Required(),
 		),
-		"--x-axis-title": flag.New(
-			flag.HelpShort("X-Axis Title. Will be set by fieldnames if not set explicitly"),
-			value.String,
+		"--x-time-unit": flag.New(
+			"X Time Unit only used for temporal types - see https://vega.github.io/vega-lite/docs/timeunit.html",
+			value.StringEnum("utcyear", "utcyearmonthdate"), // TODO: more?
 		),
 		"--x-type": flag.New(
 			"X type. See https://vega.github.io/vega-lite/docs/type.html",
 			value.StringEnum("nominal", "quantitative", "temporal"),
-		),
-		"--y-axis-title": flag.New(
-			flag.HelpShort("Y-Axis Title.  Will be set by fieldnames if not set explicitly"),
-			value.String,
 		),
 		"--y-type": flag.New(
 			"Y type. See https://vega.github.io/vega-lite/docs/type.html",
