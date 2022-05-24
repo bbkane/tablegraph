@@ -1,4 +1,4 @@
-module github.com/bbkane/tablegraph
+module go.bbkane.com/tablegraph
 
 go 1.17
 

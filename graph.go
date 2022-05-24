@@ -3,19 +3,25 @@ package main
 import (
 	"bytes"
 	"encoding/csv"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"strings"
 
 	"go.bbkane.com/warg/command"
+
+	vl "go.bbkane.com/tablegraph/vegalite"
 )
 
 type graphCSV struct {
-	FieldNames []string
 
 	// CSVContents contains the CSV plus any header rows
 	CSVContents string
+
+	XField     string
+	ColorField string
+	YField     string
 }
 
 func graph(ctx command.Context) error {
@@ -95,10 +101,75 @@ func graph(ctx command.Context) error {
 	csvStr := buf.String()
 
 	gCSV := graphCSV{
-		FieldNames:  fieldNamesSlice,
 		CSVContents: csvStr,
+		XField:      fieldNamesSlice[0],
+		ColorField:  fieldNamesSlice[1],
+		YField:      fieldNamesSlice[2],
 	}
 
-	fmt.Println(gCSV)
+	// Now, make the fucking JSON
+
+	vlj := vl.JSON{
+		Schema:      "https://vega.github.io/schema/vega-lite/v5.json",
+		Description: "TODO: Description",
+		Data: vl.Data{
+			Values: csvStr,
+			Format: vl.Format{
+				Type: "csv",
+			},
+		},
+		Mark: vl.Mark{
+			Type:    "line", // TODO: param
+			Tooltip: true,
+			Point:   true,
+		},
+		Height: "container",
+		Width:  "container",
+		Encoding: vl.Encoding{
+			X: vl.XY{
+				Field:    gCSV.XField,
+				Type:     "temporal",         // TODO: param
+				TimeUnit: "utcyearmonthdate", // TODO: param
+				Scale: &vl.Scale{
+					Type: "utc",
+				},
+			},
+			Y: vl.XY{
+				Field: gCSV.YField,
+				Type:  "quantitative", // TODO: param
+			},
+			Color: vl.Color{
+				Field: gCSV.ColorField,
+				Type:  "nominal",
+			},
+			Opacity: vl.Opacity{
+				Condition: vl.Condition{
+					Param: "hover",
+					Value: 1,
+				},
+				Value: 0.1,
+			},
+		},
+		Title: vl.Title{
+			Text: "TODO: title", // TODO: param
+		},
+		Params: []vl.Params{
+			{
+				Name: "hover",
+				Bind: "legend",
+				Select: vl.Select{
+					Type:   "point",
+					Fields: []string{"symbol"},
+				},
+			},
+		},
+	}
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(vlj); err != nil {
+		return fmt.Errorf("error encoding JSON: %w", err)
+	}
+
 	return nil
 }

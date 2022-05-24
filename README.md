@@ -112,7 +112,7 @@ For example, Git (or expenses) over time. Could also be stacked? Or an areachart
 
 # 04_linechart_diff/
 
-What's going on with these dates? Maybe it's representing it as 2020-01-01 00:00:00 and then some rounding error makes it miss something? 
+What's going on with these dates? Maybe it's representing it as 2020-01-01 00:00:00 and then some rounding error makes it miss something?
 
 ```csv
 Date,Type,Value
@@ -288,3 +288,11 @@ Let's try the facet approach:
 That *REALLY* didn't work...
 
 TODO: ask on Slack once https://github.com/vega/vega-lite/issues/8171 is resolved, or open an issue in a few days.
+
+# Writing the Code!
+
+```
+$ cat tmp.csv | go run . graph --fieldnames firstline > ./vega-lite/07_line_from_tablegraph/data.json
+```
+
+This seems to work. Let's refactor some and parameterize it

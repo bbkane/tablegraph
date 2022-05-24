@@ -2,11 +2,10 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "description": "Diff",
   "data": {
-    "values": [
-      {"Date": "2020-01-01", "Type": "Added", "Value": 10},
-      {"Date": "2020-01-04", "Type": "Added", "Value": 5},
-      {"Date": "2020-01-04", "Type": "Removed", "Value": 3}
-    ]
+    "values": "a\n1\n2\n3\n4",
+    "format": {
+      "type": "csv"
+    }
   },
   "mark": {"type": "line", "tooltip": true, "point": true},
   "height": "container",
