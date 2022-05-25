@@ -1,0 +1,57 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "TODO: Description",
+  "data": {
+    "values": "date,type,lines\n2020,Added,1\n2021,Deleted,2\n2021,Added,2\n2023,Deleted,3\n",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "mark": {
+    "type": "line",
+    "tooltip": true,
+    "point": true
+  },
+  "height": "container",
+  "width": "container",
+  "encoding": {
+    "x": {
+      "field": "date",
+      "type": "temporal",
+      "timeUnit": "utcyear",
+      "scale": {
+        "type": "utc"
+      }
+    },
+    "y": {
+      "field": "lines",
+      "type": "quantitative"
+    },
+    "color": {
+      "field": "type",
+      "type": "nominal"
+    },
+    "opacity": {
+      "condition": {
+        "param": "hover",
+        "value": 1
+      },
+      "value": 0.1
+    }
+  },
+  "title": {
+    "text": "Graph Title"
+  },
+  "params": [
+    {
+      "name": "hover",
+      "bind": "legend",
+      "select": {
+        "type": "point",
+        "fields": [
+          "symbol"
+        ]
+      }
+    }
+  ]
+}

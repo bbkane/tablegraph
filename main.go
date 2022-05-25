@@ -117,13 +117,13 @@ func main() {
 				section.Command(
 					"top",
 					"HTML top",
-					command.DoNothing,
+					runHtmlTop,
 					command.ExistingFlag("--html-title", htmlTitleFlag),
 				),
 				section.Command(
 					"bottom",
 					"HTML bottom",
-					command.DoNothing,
+					runHtmlBottom,
 				),
 			),
 		),
