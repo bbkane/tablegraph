@@ -126,6 +126,11 @@ func main() {
 					runHtmlBottom,
 				),
 			),
+			section.Command(
+				"version",
+				"Print version",
+				printVersion,
+			),
 		),
 	)
 	app.MustRun(os.Args, os.LookupEnv)
