@@ -1,0 +1,7 @@
+<div id="{{ .DivId }}" style="height:500px; width:800px"></div>
+<script type="text/javascript">
+    vegaEmbed(
+        "#{{ .DivId }}",
+        {{ .VegaLiteJSON }},
+    );
+</script>

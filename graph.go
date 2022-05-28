@@ -2,18 +2,26 @@ package main
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"strings"
+	"time"
+
+	// NOTE: we're generating JSON and we don't want it escaped, so just use text/template, NOT html/template
+	"text/template"
 
 	"go.bbkane.com/warg/command"
 
 	vl "go.bbkane.com/tablegraph/vegalite"
 )
+
+// -- graphCSV
 
 type graphCSV struct {
 
@@ -80,9 +88,45 @@ func newGraphCSV(r io.Reader, readerName string, fieldNames string, fieldSep run
 	return &gCSV, nil
 }
 
+// -- graphDiv
+
+//go:embed embedded/graph_div.html
+var graphDivTmpl string
+
+type graphDivParams struct {
+	DivId        string
+	VegaLiteJSON string
+}
+
+func buildGraphDiv(divId string, vegaLiteJSON string) (string, error) {
+	params := graphDivParams{DivId: divId, VegaLiteJSON: vegaLiteJSON}
+	tmpl, err := template.New("tmpl").Parse(graphDivTmpl)
+	if err != nil {
+		return "", fmt.Errorf("internal graph div template creation error: %w", err)
+	}
+	sb := strings.Builder{}
+	err = tmpl.Execute(&sb, params)
+	if err != nil {
+		return "", fmt.Errorf("internal graph div template execution error: %w", err)
+	}
+	return sb.String(), nil
+}
+
+// -- graph command
+
+func randomHexString(length int) string {
+	// https://stackoverflow.com/a/65607935/2958070
+	rand.Seed(time.Now().UnixNano())
+	b := make([]byte, length)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)[:length]
+}
+
 func graph(ctx command.Context) error {
 	// I/O flags
+	format := ctx.Flags["--format"].(string)
 	input, inputExists := ctx.Flags["--input"].(string)
+	divID, divIDExists := ctx.Flags["--div-id"].(string)
 
 	// CSV flags
 	fieldNames := ctx.Flags["--fieldnames"].(string)
@@ -94,6 +138,10 @@ func graph(ctx command.Context) error {
 	gXType, _ := ctx.Flags["--x-type"].(string)
 	gYType, _ := ctx.Flags["--y-type"].(string)
 	gXTimeUnit, _ := ctx.Flags["--x-time-unit"].(string)
+
+	if !divIDExists {
+		divID = randomHexString(10)
+	}
 
 	switch gType {
 	case "grouped-bar":
@@ -191,11 +239,35 @@ func graph(ctx command.Context) error {
 		},
 	}
 
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
-	if err := enc.Encode(vlj); err != nil {
-		return fmt.Errorf("error encoding JSON: %w", err)
+	switch format {
+	case "div":
+		// I'm getting the prefix from the html template
+		jsonBytes, err := json.MarshalIndent(vlj, "        ", "  ")
+		if err != nil {
+			return fmt.Errorf("error marshalling JSON: %w", err)
+		}
+		jsonStr := string(jsonBytes)
+
+		graphDiv, err := buildGraphDiv(divID, jsonStr)
+		if err != nil {
+			return fmt.Errorf("error formatting div: %w", err)
+		}
+		fmt.Println(graphDiv)
+		return nil
+
+	case "html":
+		return errors.New("TODO")
+
+	case "json":
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		if err := enc.Encode(vlj); err != nil {
+			return fmt.Errorf("error encoding JSON: %w", err)
+		}
+		return nil
+
+	default:
+		return fmt.Errorf("invalid --format flag value: %v", format)
 	}
 
-	return nil
 }

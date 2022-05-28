@@ -35,7 +35,7 @@ func main() {
 	// flags for making both graphs and tables!
 	ioFlags := flag.FlagMap{
 		"--div-id": flag.New(
-			flag.HelpShort("ID of div when --format is 'div'"),
+			flag.HelpShort("ID of div when --format is 'div'. If not passed, a random string will be used"),
 			value.String,
 		),
 		"--format": flag.New(
