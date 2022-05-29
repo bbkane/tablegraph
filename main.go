@@ -101,7 +101,7 @@ func main() {
 			section.Command(
 				"table",
 				command.HelpShort("Make HTML table"),
-				command.DoNothing,
+				table,
 				command.ExistingFlags(csvParseFlags),
 				command.ExistingFlags(ioFlags),
 				command.Flag(

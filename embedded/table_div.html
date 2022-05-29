@@ -1,0 +1,9 @@
+<div id="{{ .DivId }}">
+    <table id="{{ .DivId }}_table" class="compact stripe hover">
+    </table>
+</div>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('#{{ .DivId }}_table').DataTable({{ .TableJSON }});
+    });
+</script>
