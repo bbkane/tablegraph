@@ -19,11 +19,6 @@ func main() {
 	)
 
 	csvParseFlags := flag.FlagMap{
-		"--fieldnames": flag.New(
-			"Pass comma separated fieldnames (ex: 'date,type,lines') or the string 'firstline' to use the first line of the CSV",
-			value.String,
-			flag.Default("x,category,y"),
-		),
 		"--fieldsep": flag.New(
 			flag.HelpShort("Field separator for input table"),
 			value.String,
@@ -96,6 +91,12 @@ func main() {
 				command.ExistingFlags(csvParseFlags),
 				command.ExistingFlags(ioFlags),
 				command.ExistingFlags(graphFlags),
+				command.Flag(
+					"--fieldnames",
+					"Pass comma separated fieldnames (ex: 'date,type,lines') or the string 'firstline' to use the first line of the CSV",
+					value.String,
+					flag.Default("x,category,y"),
+				),
 				command.HelpLong("First column is x-axis, and should be datetime. Second column is a string whose values are used to 'group'. Third column is a numeric column for the y-axis"),
 			),
 			section.Command(
@@ -105,9 +106,15 @@ func main() {
 				command.ExistingFlags(csvParseFlags),
 				command.ExistingFlags(ioFlags),
 				command.Flag(
+					"--fieldnames",
+					"Pass comma separated fieldnames (ex: 'date,type,lines') or the string 'firstline' to use the first line of the CSV. Will be generated if not passed.",
+					value.String,
+				),
+				command.Flag(
 					"--page-length",
-					flag.HelpShort("Entries in table before needing to click next page"),
+					"Entries in table before needing to click next page",
 					value.Int,
+					flag.Default("30"),
 				),
 				command.HelpLong("NOTE: columns should not have a `.` in the title. See https://datatables.net/forums/discussion/69257/data-with-a-in-the-name-makes-table-creation-fail#latest"),
 			),
