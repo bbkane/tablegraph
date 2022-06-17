@@ -1,0 +1,6 @@
+Examples:
+
+Examples use https://github.com/bbkane/dotfiles/blob/master/bin_common/bin_common/open_tmp_html.py to easily open HTML files
+
+  # line chart
+  printf "1 2 3\\n3 4 5\\n" | go run . --fieldsep ' ' graph | open_tmp_html.py

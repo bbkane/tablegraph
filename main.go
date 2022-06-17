@@ -3,12 +3,17 @@ package main
 import (
 	"os"
 
+	_ "embed"
+
 	"go.bbkane.com/warg"
 	"go.bbkane.com/warg/command"
 	"go.bbkane.com/warg/flag"
 	"go.bbkane.com/warg/section"
 	"go.bbkane.com/warg/value"
 )
+
+//go:embed embedded/graphFooter.txt
+var graphFooter string
 
 func main() {
 
@@ -98,6 +103,9 @@ func main() {
 					flag.Default("x,category,y"),
 				),
 				command.HelpLong("First column is x-axis, and should be datetime. Second column is a string whose values are used to 'group'. Third column is a numeric column for the y-axis"),
+				command.Footer(
+					graphFooter,
+				),
 			),
 			section.Command(
 				"table",

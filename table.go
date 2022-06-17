@@ -28,7 +28,7 @@ func newTableCSV(r io.Reader, fieldNames string, fieldSep rune) (*tableCSV, erro
 	csvReader.Comma = fieldSep
 	records, err := csvReader.ReadAll()
 	if err != nil {
-		return nil, fmt.Errorf("unable to parse CSV: %s: %w", err)
+		return nil, fmt.Errorf("unable to parse CSV: %w", err)
 	}
 
 	var tCSV tableCSV
@@ -54,7 +54,7 @@ func newTableCSV(r io.Reader, fieldNames string, fieldSep rune) (*tableCSV, erro
 
 // -- tableDiv
 
-//go:embed embedded/table_div.html
+//go:embed embedded/tableDiv.html
 var tableDivTmpl string
 
 type tableDivParams struct {

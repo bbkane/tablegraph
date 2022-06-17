@@ -90,7 +90,7 @@ func newGraphCSV(r io.Reader, readerName string, fieldNames string, fieldSep run
 
 // -- graphDiv
 
-//go:embed embedded/graph_div.html
+//go:embed embedded/graphDiv.html
 var graphDivTmpl string
 
 type graphDivParams struct {

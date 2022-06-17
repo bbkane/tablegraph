@@ -9,10 +9,10 @@ import (
 	"go.bbkane.com/warg/command"
 )
 
-//go:embed embedded/html_top.html
+//go:embed embedded/htmlTop.html
 var htmlTop string
 
-//go:embed embedded/html_bottom.html
+//go:embed embedded/htmlBottom.html
 var htmlBottom string
 
 type htmlTopParams struct {

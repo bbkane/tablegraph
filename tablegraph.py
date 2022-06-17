@@ -34,6 +34,7 @@ I install with:
     ln -s $HOME/Git/tablegraph/tablegraph.py $HOME/bin/tablegraph
 """
 
+
 epilog = """
 # Examples:
 
@@ -63,7 +64,7 @@ printf "1 2 3\\n3 4 5\\n"  | chart.py --fieldsep ' ' table
 
 # Run tests (for dev usage):
 python3 -m unittest chart.py
-""".format(
+""".format(  # noqa: E501
     prog=pathlib.Path(sys.argv[0]).name
 )
 
@@ -189,7 +190,7 @@ def html_header(title: str) -> str:
 
       </head>
       <body>
-    """
+    """  # noqa: E501
     header = header.format(title=title)
     return header
 
@@ -456,7 +457,7 @@ def parse_args(*args, **kwargs):
         "--loglevel",
         choices=["NOTSET", "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         default="INFO",
-        help="Defaults to 'INFO'. Logs to stderr. See https://docs.python.org/3/library/logging.html#levels",
+        help="Defaults to 'INFO'. Logs to stderr. See https://docs.python.org/3/library/logging.html#levels",  # noqa: E501
     )
 
     parser.add_argument(
@@ -464,10 +465,10 @@ def parse_args(*args, **kwargs):
         "-o",
         help="Lot of options here.\n"
         "<name> : <name> written to a file.\n"
-        "<name>.div : Instead of an html file, the div will be printed to stdout. Useful for making a multi-chart report.\n"
+        "<name>.div : Instead of an html file, the div will be printed to stdout. Useful for making a multi-chart report.\n"  # noqa: E501
         "<name>.json : JSON will be saved to a <name>.json.\n"
         "DATEME : chart.<timestamp>.html written.\n"
-        "not passed : a tempfile chart will open in a browser.\n",
+        "not passed : a tempfile chart will open in a browser.\n",  # noqa: E501
     )
 
     # csv flags
@@ -508,7 +509,7 @@ def parse_args(*args, **kwargs):
 
     table_parser = subcommands.add_parser(
         "table",
-        help="Table. NOTE: columns should not have a `.` in the title. See https://datatables.net/forums/discussion/69257/data-with-a-in-the-name-makes-table-creation-fail#latest",
+        help="Table. NOTE: columns should not have a `.` in the title. See https://datatables.net/forums/discussion/69257/data-with-a-in-the-name-makes-table-creation-fail#latest",  # noqa: E501
     )
     table_parser.add_argument(
         "--page_length",
@@ -518,7 +519,7 @@ def parse_args(*args, **kwargs):
 
     timechart_parser = subcommands.add_parser(
         "timechart",
-        help='Line graph. First column is x-axis, and should be datetime. Second column can optionally be a string whose values are used to "group" the numeric columns and create different lines in the chart. Other (numeric) columns are y-axes.',
+        help='Line graph. First column is x-axis, and should be datetime. Second column can optionally be a string whose values are used to "group" the numeric columns and create different lines in the chart. Other (numeric) columns are y-axes.',  # noqa: E501
     )
     timechart_parser.add_argument(
         "--chart_title",
