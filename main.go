@@ -93,12 +93,20 @@ func main() {
 		"tablegraph",
 		section.New(
 			section.HelpShort("Turn CSVs into graphs! NOTE: this is an experiment at this stage. Use tablegraph.py"),
-			section.Flag(
-				"--output",
-				flag.HelpShort("Path to output file. Use DATEME as an alias for 'graph.<timestamp>'."),
-				value.Path,
-				flag.Default("DATEME.html"),
-				flag.Required(),
+			section.Section(
+				"examples",
+				"Print some more complicated real-world examples",
+				section.Command(
+					"repolines",
+					"Stacked bar chart of lines changed over time in a git repo",
+					printString(examplesLinesText),
+				),
+				// section.Command(
+				// 	"langlines",
+				// 	"Grouped bar chart of lines of code by language in a folder",
+				// 	printString(examplesLangLinesText),
+				// ),
+				// Add something from osquery, something from github stars? Shell history chart?
 			),
 			section.Command(
 				"graph",
