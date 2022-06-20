@@ -14,7 +14,6 @@ import (
 	"time"
 
 	// NOTE: we're generating JSON and we don't want it escaped, so just use text/template, NOT html/template
-	"text/template"
 
 	"go.bbkane.com/warg/command"
 
@@ -98,18 +97,17 @@ type graphDivParams struct {
 	VegaLiteJSON string
 }
 
-func buildGraphDiv(divId string, vegaLiteJSON string) (string, error) {
-	params := graphDivParams{DivId: divId, VegaLiteJSON: vegaLiteJSON}
-	tmpl, err := template.New("tmpl").Parse(graphDivTmpl)
+func buildGraphDiv2(divId string, vgl vl.JSON) (string, error) {
+	// I'm getting the prefix from the html template
+	jsonBytes, err := json.MarshalIndent(vgl, "        ", "  ")
 	if err != nil {
-		return "", fmt.Errorf("internal graph div template creation error: %w", err)
+		return "", fmt.Errorf("error marshalling JSON: %w", err)
 	}
-	sb := strings.Builder{}
-	err = tmpl.Execute(&sb, params)
-	if err != nil {
-		return "", fmt.Errorf("internal graph div template execution error: %w", err)
-	}
-	return sb.String(), nil
+	jsonStr := string(jsonBytes)
+
+	params := graphDivParams{DivId: divId, VegaLiteJSON: jsonStr}
+	return buildTemplateString(graphDivTmpl, params)
+
 }
 
 // -- graph command
@@ -132,10 +130,15 @@ func graph(ctx command.Context) error {
 	fieldNames := ctx.Flags["--fieldnames"].(string)
 	fieldSep := ctx.Flags["--fieldsep"].(string)
 
+	// HTML flags
+	htmlTitle := ctx.Flags["--html-title"].(string)
+
 	// Graph Flags
 	gTitle := ctx.Flags["--graph-title"].(string)
 	gType := ctx.Flags["--type"].(string)
+	gXScaleType, gXScaleTypeExists := ctx.Flags["--x-scale-type"].(string)
 	gXType, _ := ctx.Flags["--x-type"].(string)
+	gYScaleType, gYScaleTypeExists := ctx.Flags["--y-scale-type"].(string)
 	gYType, _ := ctx.Flags["--y-type"].(string)
 	gXTimeUnit, _ := ctx.Flags["--x-time-unit"].(string)
 
@@ -147,10 +150,20 @@ func graph(ctx command.Context) error {
 	case "grouped-bar":
 		gType = "bar"
 		// TODO: add the xOffset thingie
+		return errors.New("TODO")
 	case "stacked-bar":
 		gType = "bar"
 	default:
 		// pass
+	}
+
+	var xScale *vl.Scale
+	if gXScaleTypeExists {
+		xScale = &vl.Scale{Type: gXScaleType}
+	}
+	var yScale *vl.Scale
+	if gYScaleTypeExists {
+		yScale = &vl.Scale{Type: gYScaleType}
 	}
 
 	// Get a fieldSepRune
@@ -204,13 +217,12 @@ func graph(ctx command.Context) error {
 				Field:    gCSV.XField,
 				Type:     gXType,
 				TimeUnit: gXTimeUnit,
-				Scale: &vl.Scale{
-					Type: "utc",
-				}, // TODO: param
+				Scale:    xScale,
 			},
 			Y: vl.XY{
 				Field: gCSV.YField,
 				Type:  gYType,
+				Scale: yScale,
 			},
 			Color: vl.Color{
 				Field: gCSV.ColorField,
@@ -241,22 +253,28 @@ func graph(ctx command.Context) error {
 
 	switch format {
 	case "div":
-		// I'm getting the prefix from the html template
-		jsonBytes, err := json.MarshalIndent(vlj, "        ", "  ")
-		if err != nil {
-			return fmt.Errorf("error marshalling JSON: %w", err)
-		}
-		jsonStr := string(jsonBytes)
-
-		graphDiv, err := buildGraphDiv(divID, jsonStr)
+		div, err := buildGraphDiv2(divID, vlj)
 		if err != nil {
 			return fmt.Errorf("error formatting div: %w", err)
 		}
-		fmt.Println(graphDiv)
+		fmt.Println(div)
+
 		return nil
 
 	case "html":
-		return errors.New("TODO")
+		div, err := buildGraphDiv2(divID, vlj)
+		if err != nil {
+			return fmt.Errorf("error formatting div: %w", err)
+		}
+		htmlTop, err := buildHtmlTop(htmlTitle)
+		if err != nil {
+			return fmt.Errorf("error formatting html top: %w", err)
+		}
+
+		fmt.Println(htmlTop)
+		fmt.Println(div)
+		fmt.Println(buildHtmlBottom())
+		return nil
 
 	case "json":
 		enc := json.NewEncoder(os.Stdout)

@@ -1,6 +1,17 @@
 Examples:
 
-Examples use https://github.com/bbkane/dotfiles/blob/master/bin_common/bin_common/open_tmp_html.py to easily open HTML files
-
   # line chart
-  printf "1 2 3\\n3 4 5\\n" | go run . --fieldsep ' ' graph | open_tmp_html.py
+  printf "1 cat 3\\n3 cat 5\\n4 cat 4" \
+  | tablegraph graph \
+      --fieldsep ' ' \
+      --type line
+
+  # stacked bar time chart
+  printf "date,type,lines\n2022,added,1\n2022,deleted,2\n2023,added,4" \
+  | tablegraph graph \
+      --fieldnames firstline \
+      --type stacked-bar \
+      --x-scale-type utc \
+      --x-time-unit utcyear \
+      --x-type temporal \
+      --y-type quantitative

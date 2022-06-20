@@ -64,12 +64,20 @@ func main() {
 			flag.Required(),
 		),
 		"--x-time-unit": flag.New(
-			"X Time Unit only used for temporal types - see https://vega.github.io/vega-lite/docs/timeunit.html",
-			value.StringEnum("utcyear", "utcyearmonthdate"), // TODO: more?
+			"X Time Unit only used for temporal types - see https://vega.github.io/vega-lite/docs/timeunit.html . It's advised to use ones prefixed with utc - utcyear , utcyearmonthday",
+			value.String,
+		),
+		"--x-scale-type": flag.New(
+			"X scale type. See https://vega.github.io/vega-lite/docs/scale.html . Particularly useful to set to 'utc' for time-valued charts",
+			value.String,
 		),
 		"--x-type": flag.New(
 			"X type. See https://vega.github.io/vega-lite/docs/type.html",
 			value.StringEnum("nominal", "quantitative", "temporal"),
+		),
+		"--y-scale-type": flag.New(
+			"Y scale type. See https://vega.github.io/vega-lite/docs/scale.html . Particularly useful to set to 'utc' for time-valued charts",
+			value.String,
 		),
 		"--y-type": flag.New(
 			"Y type. See https://vega.github.io/vega-lite/docs/type.html",

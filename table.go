@@ -62,6 +62,22 @@ type tableDivParams struct {
 	TableJSON string
 }
 
+// buildTemplateString reads a template from a string, fills in the params,
+// and returns the resulting string
+func buildTemplateString(tmpl string, params interface{}) (string, error) {
+
+	parsed, err := template.New("tmpl").Parse(tmpl)
+	if err != nil {
+		return "", fmt.Errorf("internal template creation error: %w", err)
+	}
+	sb := strings.Builder{}
+	err = parsed.Execute(&sb, params)
+	if err != nil {
+		return "", fmt.Errorf("internal template execution error: %w", err)
+	}
+	return sb.String(), nil
+}
+
 func buildTableDiv(divId string, dtJSON datatables.DataTable) (string, error) {
 
 	// I'm getting the prefix from the html template
@@ -72,16 +88,8 @@ func buildTableDiv(divId string, dtJSON datatables.DataTable) (string, error) {
 	jsonStr := string(jsonBytes)
 
 	params := tableDivParams{DivId: divId, TableJSON: jsonStr}
-	tmpl, err := template.New("tmpl").Parse(tableDivTmpl)
-	if err != nil {
-		return "", fmt.Errorf("internal table div template creation error: %w", err)
-	}
-	sb := strings.Builder{}
-	err = tmpl.Execute(&sb, params)
-	if err != nil {
-		return "", fmt.Errorf("internal table div template execution error: %w", err)
-	}
-	return sb.String(), nil
+
+	return buildTemplateString(tableDivTmpl, params)
 }
 
 // -- table command
