@@ -47,10 +47,11 @@ type Opacity struct {
 	Value     float64   `json:"value"`
 }
 type Encoding struct {
-	X       XY      `json:"x"`
-	Y       XY      `json:"y"`
-	Color   Color   `json:"color"`
-	Opacity Opacity `json:"opacity"`
+	X       XY       `json:"x"`
+	Y       XY       `json:"y"`
+	Color   Color    `json:"color"`
+	Opacity Opacity  `json:"opacity"`
+	XOffset *XOffset `json:"xOffset,omitempty"`
 }
 type Title struct {
 	Text string `json:"text"`
@@ -63,4 +64,8 @@ type Params struct {
 	Name   string `json:"name"`
 	Bind   string `json:"bind"`
 	Select Select `json:"select"`
+}
+
+type XOffset struct {
+	Field string `json:"field"`
 }

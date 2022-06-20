@@ -15,3 +15,12 @@ Examples:
       --x-time-unit utcyear \
       --x-type temporal \
       --y-type quantitative
+
+  # grouped bar chart
+  printf "project language lines\ntablegraph Go 827\ntablegraph JSON 285\ntablegraph plain-text 17\nhelloworld Go 10\n" \
+  | go run . graph \
+    --fieldnames firstline \
+    --fieldsep ' ' \
+    --type grouped-bar \
+    --x-type nominal \
+    --y-type quantitative

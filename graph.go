@@ -146,17 +146,6 @@ func graph(ctx command.Context) error {
 		divID = randomHexString(10)
 	}
 
-	switch gType {
-	case "grouped-bar":
-		gType = "bar"
-		// TODO: add the xOffset thingie
-		return errors.New("TODO")
-	case "stacked-bar":
-		gType = "bar"
-	default:
-		// pass
-	}
-
 	var xScale *vl.Scale
 	if gXScaleTypeExists {
 		xScale = &vl.Scale{Type: gXScaleType}
@@ -194,6 +183,17 @@ func graph(ctx command.Context) error {
 	gCSV, err := newGraphCSV(inputFp, input, fieldNames, fieldSepRune)
 	if err != nil {
 		return err
+	}
+
+	var xOffset *vl.XOffset
+	switch gType {
+	case "grouped-bar":
+		gType = "bar"
+		xOffset = &vl.XOffset{Field: gCSV.ColorField}
+	case "stacked-bar":
+		gType = "bar"
+	default:
+		// pass
 	}
 
 	vlj := vl.JSON{
@@ -235,6 +235,7 @@ func graph(ctx command.Context) error {
 				},
 				Value: 0.1,
 			},
+			XOffset: xOffset,
 		},
 		Title: vl.Title{
 			Text: gTitle,
