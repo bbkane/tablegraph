@@ -92,7 +92,7 @@ func main() {
 	app := warg.New(
 		"tablegraph",
 		section.New(
-			section.HelpShort("Turn CSVs into graphs! NOTE: this is an experiment at this stage. Use tablegraph.py"),
+			section.HelpShort("Turn CSVs into graphs!"),
 			section.Section(
 				"examples",
 				"Print some more complicated real-world examples",

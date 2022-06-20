@@ -18,7 +18,7 @@ Examples:
 
   # grouped bar chart
   printf "project language lines\ntablegraph Go 827\ntablegraph JSON 285\ntablegraph plain-text 17\nhelloworld Go 10\n" \
-  | go run . graph \
+  | tablegraph graph \
     --fieldnames firstline \
     --fieldsep ' ' \
     --type grouped-bar \

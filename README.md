@@ -1,5 +1,7 @@
 # tablegraph
 
+TODO: actually spend some time writing this :) Probably shove some examples in the README
+
 Create graphs from CSVs
 
 The Go files are experimental. The Python version actually works.

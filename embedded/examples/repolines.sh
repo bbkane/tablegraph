@@ -27,7 +27,7 @@ git log \
             print $1, "deletion", deletions
         }
     }
-' | go run . graph \
+' | tablegraph graph \
     --fieldsep $'\t' \
     --fieldnames firstline \
     --graph-title "Git History" \
