@@ -57,6 +57,10 @@ func main() {
 			value.String,
 			flag.Default("Graph Title"),
 		),
+		"--mark-size": flag.New(
+			"Size of mark (useful for making bar charts wider",
+			value.Int,
+		),
 		"--type": flag.New(
 			"Type of graph to generate",
 			value.StringEnum("point", "line", "grouped-bar", "stacked-bar"),

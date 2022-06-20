@@ -24,6 +24,7 @@ type Mark struct {
 	Type    string `json:"type"`
 	Tooltip bool   `json:"tooltip"`
 	Point   bool   `json:"point"`
+	Size    int    `json:"size,omitempty"`
 }
 type Scale struct {
 	Type string `json:"type"`

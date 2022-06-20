@@ -134,6 +134,7 @@ func graph(ctx command.Context) error {
 	htmlTitle := ctx.Flags["--html-title"].(string)
 
 	// Graph Flags
+	gMarkSize, _ := ctx.Flags["--mark-size"].(int)
 	gTitle := ctx.Flags["--graph-title"].(string)
 	gType := ctx.Flags["--type"].(string)
 	gXScaleType, gXScaleTypeExists := ctx.Flags["--x-scale-type"].(string)
@@ -209,6 +210,7 @@ func graph(ctx command.Context) error {
 			Type:    gType,
 			Tooltip: true,
 			Point:   true,
+			Size:    gMarkSize,
 		},
 		Height: "container",
 		Width:  "container",
