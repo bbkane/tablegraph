@@ -1,5 +1,9 @@
 # tablegraph
 
+# Install
+
+Macos: `brew install bbkane/tap/tablegraph`
+
 TODO: actually spend some time writing this :) Probably shove some examples in the README
 
 Create graphs from CSVs
