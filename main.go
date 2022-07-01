@@ -15,6 +15,9 @@ import (
 //go:embed embedded/graphFooter.txt
 var graphFooter string
 
+//go:embed embedded/tableFooter.txt
+var tableFooter string
+
 func main() {
 
 	htmlTitleFlag := flag.New(
@@ -52,6 +55,17 @@ func main() {
 	}
 
 	graphFlags := flag.FlagMap{
+
+		"--div-height": flag.New(
+			"CSS for Div height. Only used for graph",
+			value.String,
+			flag.Default("600px"),
+		),
+		"--div-width": flag.New(
+			"CSS for Div width. Only used for graph",
+			value.String,
+			flag.Default("800px"),
+		),
 		"--graph-title": flag.New(
 			flag.HelpShort("Graph title"),
 			value.String,
@@ -145,6 +159,7 @@ func main() {
 					flag.Default("30"),
 				),
 				command.HelpLong("NOTE: columns should not have a `.` in the title. See https://datatables.net/forums/discussion/69257/data-with-a-in-the-name-makes-table-creation-fail#latest"),
+				command.Footer(tableFooter),
 			),
 			section.Section(
 				"html",

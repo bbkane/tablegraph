@@ -95,9 +95,11 @@ var graphDivTmpl string
 type graphDivParams struct {
 	DivId        string
 	VegaLiteJSON string
+	DivWidth     string
+	DivHeight    string
 }
 
-func buildGraphDiv2(divId string, vgl vl.JSON) (string, error) {
+func buildGraphDiv2(divId string, vgl vl.JSON, divHeight string, divWidth string) (string, error) {
 	// I'm getting the prefix from the html template
 	jsonBytes, err := json.MarshalIndent(vgl, "        ", "  ")
 	if err != nil {
@@ -105,7 +107,7 @@ func buildGraphDiv2(divId string, vgl vl.JSON) (string, error) {
 	}
 	jsonStr := string(jsonBytes)
 
-	params := graphDivParams{DivId: divId, VegaLiteJSON: jsonStr}
+	params := graphDivParams{DivId: divId, VegaLiteJSON: jsonStr, DivWidth: divWidth, DivHeight: divHeight}
 	return buildTemplateString(graphDivTmpl, params)
 
 }
@@ -132,6 +134,8 @@ func graph(ctx command.Context) error {
 
 	// HTML flags
 	htmlTitle := ctx.Flags["--html-title"].(string)
+	divWidth := ctx.Flags["--div-width"].(string)
+	divHeight := ctx.Flags["--div-height"].(string)
 
 	// Graph Flags
 	gMarkSize, _ := ctx.Flags["--mark-size"].(int)
@@ -248,7 +252,7 @@ func graph(ctx command.Context) error {
 				Bind: "legend",
 				Select: vl.Select{
 					Type:   "point",
-					Fields: []string{"symbol"},
+					Fields: []string{gCSV.ColorField},
 				},
 			},
 		},
@@ -256,7 +260,7 @@ func graph(ctx command.Context) error {
 
 	switch format {
 	case "div":
-		div, err := buildGraphDiv2(divID, vlj)
+		div, err := buildGraphDiv2(divID, vlj, divHeight, divWidth)
 		if err != nil {
 			return fmt.Errorf("error formatting div: %w", err)
 		}
@@ -265,7 +269,7 @@ func graph(ctx command.Context) error {
 		return nil
 
 	case "html":
-		div, err := buildGraphDiv2(divID, vlj)
+		div, err := buildGraphDiv2(divID, vlj, divHeight, divWidth)
 		if err != nil {
 			return fmt.Errorf("error formatting div: %w", err)
 		}

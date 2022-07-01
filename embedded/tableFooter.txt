@@ -1,0 +1,3 @@
+Examples:
+
+  printf "1 2 3\\n3 4 5\\n" | tablegraph --fieldsep ' ' --fieldnames firstline table
