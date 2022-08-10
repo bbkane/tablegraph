@@ -1,20 +1,20 @@
 # tablegraph
 
-# Install
-
-Macos: `brew install bbkane/tap/tablegraph`
-
-TODO: actually spend some time writing this :) Probably shove some examples in the README
-
 Create graphs from CSVs
 
-The Go files are experimental. The Python version actually works.
+## Install
 
-Simple install via symlink:
+- [Homebrew](https://brew.sh/): `brew install bbkane/tap/tablegraph`
+- [Scoop](https://scoop.sh/):
 
-```bash
-ln -s $HOME/Git/tablegraph/tablegraph.py $HOME/bin/tablegraph
 ```
+scoop bucket add bbkane https://github.com/bbkane/scoop-bucket
+scoop install bbkane/tablegraph
+```
+
+- Download Mac/Linux/Windows executable: [GitHub releases](https://github.com/bbkane/tablegraph/releases)
+- Go: `go install go.bbkane.com/tablegraph@latest`
+- Build with [goreleaser](https://goreleaser.com/) after cloning: `goreleaser --snapshot --skip-publish --rm-dist`
 
 # Go + Vega-Lite Rewrite
 
