@@ -71,7 +71,10 @@ func newGraphCSV(r io.Reader, readerName string, fieldNames string, fieldSep run
 		}
 	}
 
-	w.WriteAll(records)
+	err = w.WriteAll(records)
+	if err != nil {
+		return nil, fmt.Errorf("error writing row: %w", err)
+	}
 	if err := w.Error(); err != nil {
 		return nil, fmt.Errorf("error saving CSV to string: %w", err)
 	}
@@ -226,9 +229,10 @@ func graph(ctx command.Context) error {
 				Scale:    xScale,
 			},
 			Y: vl.XY{
-				Field: gCSV.YField,
-				Type:  gYType,
-				Scale: yScale,
+				Field:    gCSV.YField,
+				Type:     gYType,
+				Scale:    yScale,
+				TimeUnit: "",
 			},
 			Color: vl.Color{
 				Field: gCSV.ColorField,
