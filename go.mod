@@ -1,6 +1,6 @@
 module go.bbkane.com/tablegraph
 
-go 1.17
+go 1.20
 
 require go.bbkane.com/warg v0.0.14
 
