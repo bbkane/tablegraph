@@ -2,16 +2,15 @@ package main
 
 import (
 	"bytes"
+	"crypto/rand"
 	_ "embed"
 	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"math/rand"
 	"os"
 	"strings"
-	"time"
 
 	// NOTE: we're generating JSON and we don't want it escaped, so just use text/template, NOT html/template
 
@@ -118,10 +117,12 @@ func buildGraphDiv2(divId string, vgl vl.JSON, divHeight string, divWidth string
 // -- graph command
 
 func randomHexString(length int) string {
-	// https://stackoverflow.com/a/65607935/2958070
-	rand.Seed(time.Now().UnixNano())
+	// https://stackoverflow.com/a/54491783/2958070
 	b := make([]byte, length)
-	rand.Read(b)
+	_, err := rand.Read(b)
+	if err != nil {
+		panic(fmt.Sprintf("error generating random number: %s", err))
+	}
 	return fmt.Sprintf("div_%x", b)[:length+4]
 }
 
