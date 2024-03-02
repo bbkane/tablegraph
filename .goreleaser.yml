@@ -16,7 +16,7 @@ brews:
     description: Create graphs from CSVs
     folder: Formula
     homepage: https://github.com/bbkane/tablegraph
-    tap:
+    repository:
       name: homebrew-tap
       owner: bbkane
       # Optionally a token can be provided, if it differs from the token provided to GoReleaser
@@ -41,12 +41,11 @@ changelog:
   sort: asc
 checksum:
   name_template: checksums.txt
-# https://goreleaser.com/customization/scoop/
-scoop:
-  bucket:
-    name: scoop-bucket
-    owner: bbkane
-    token: '{{ .Env.KEY_GITHUB_GORELEASER_TO_HOMEBREW_TAP }}'
-  description: Create graphs from CSVs
-  homepage: https://github.com/bbkane/tablegraph
-  license: MIT
+scoops:
+  - description: Create graphs from CSVs
+    homepage: https://github.com/bbkane/tablegraph
+    license: MIT
+    repository:
+      name: scoop-bucket
+      owner: bbkane
+      token: '{{ .Env.KEY_GITHUB_GORELEASER_TO_HOMEBREW_TAP }}'
