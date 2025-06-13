@@ -2,6 +2,10 @@
 
 Create graphs from CSVs
 
+## Project Status
+
+Not actively developed - I'm not really using `tablegraph` anymore. I'm watching issues; please open one for any questions and especially BEFORE submitting a Pull Request.
+
 ## Install
 
 - [Homebrew](https://brew.sh/): `brew install bbkane/tap/tablegraph`
