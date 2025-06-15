@@ -2,9 +2,9 @@
 
 Create graphs from CSVs
 
-## Project Status
+## Project Status (2025-06-14)
 
-Not actively developed - I'm not really using `tablegraph` anymore. I'm watching issues; please open one for any questions and especially BEFORE submitting a Pull Request.
+Not actively developed - I'm not really using `tablegraph` anymore- the graphs didn't look as good as I'd hoped and I found Observable Framework, which is pretty nice. I'm watching issues; please open one for any questions and especially BEFORE submitting a Pull Request.
 
 ## Install
 
